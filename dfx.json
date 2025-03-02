@@ -1,0 +1,17 @@
+{
+  "canisters": {
+    "forwarder": {
+      "main": "src/main.mo",
+      "type": "motoko",
+      "init_arg": "(\"64xen-zyaaa-aaaap-anv3a-cai\")"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
