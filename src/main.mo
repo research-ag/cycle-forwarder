@@ -55,13 +55,9 @@ actor class (wallet : Text) {
     if (balance > 82_500_000_000) throw Error.reject("Canister balance is too high. Sweep first."); 
     let burned = Prim.cyclesBurn<system>(balance);
     var i = 0;
-    var ctr = IC.performanceCounter(0);
     let limit = 40_000_000_000 - 10_000 - keep;
-    while (ctr < limit) {
-      i += 1;
-      ctr := IC.performanceCounter(0);
-    };
-    (burned, ctr)
+    while (IC.performanceCounter(0) < limit) i += 1;
+    (burned, IC.performanceCounter(0))
   };
 
   // WARNING: burns as many cycles as possible minus what is specified in the

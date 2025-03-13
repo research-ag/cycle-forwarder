@@ -3,7 +3,10 @@
     "forwarder": {
       "main": "src/main.mo",
       "type": "motoko",
-      "init_arg": "(\"s7qny-xqaaa-aaaam-aefgq-cai\")"
+      "init_arg": "(\"s7qny-xqaaa-aaaam-aefgq-cai\")",
+      "metadata": [
+        { "name": "candid:service" }
+      ]
     }
   },
   "defaults": {
