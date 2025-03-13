@@ -1,4 +1,5 @@
 import Cycles "mo:base/ExperimentalCycles";
+import Error "mo:base/Error";
 import IC "mo:base/ExperimentalInternetComputer";
 import Principal "mo:base/Principal";
 import Prim "mo:prim";
@@ -50,7 +51,9 @@ actor class (wallet : Text) {
   // The argument specifies how many cycles are to be kept The value to be kept
   // must be < 40 billion
   public func deplete(keep : Nat64) : async (Nat, Nat64) {
-    let burned = Prim.cyclesBurn<system>(Cycles.balance());
+    let balance = Cycles.balance();
+    if (balance > 82_500_000_000) throw Error.reject("Canister balance is too high. Sweep first."); 
+    let burned = Prim.cyclesBurn<system>(balance);
     var i = 0;
     var ctr = IC.performanceCounter(0);
     let limit = 40_000_000_000 - 10_000 - keep;
@@ -67,6 +70,8 @@ actor class (wallet : Text) {
   // This does not fully deplete the canister. About 40 billion cycles, who were
   // reserved for execution of this message, will remain.
   public func burn(keep : Nat) : async Nat {
-    Prim.cyclesBurn<system>(Cycles.balance() - keep);
+    let balance = Cycles.balance();
+    if (balance > 82_500_000_000) throw Error.reject("Canister balance is too high. Sweep first."); 
+    Prim.cyclesBurn<system>(balance - keep);
   };
 }
