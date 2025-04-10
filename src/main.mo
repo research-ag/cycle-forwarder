@@ -23,12 +23,15 @@ actor class (wallet : Text) {
   //   40B for processing 40B instructions
   //   + 2B for 2 MB response size
   //   + epsilon
+  // 
+  // Important: Sweeping will fail if freezing threshold is not set to the minimum
+  // Use: dfx canister --ic update-settings --freezing-threshold 604_800 <canister>
 
   // sweep through inter-canister wallet call
   public func sweep(keep : ?Nat) : async Nat {
     let amt : Nat = Cycles.balance() - (switch (keep) {
       case (?x) x * 1_000_000_000;
-      case _ 42_105_000_000; // lowest tested value: 42_102_432_000
+      case _ 42_500_000_000; // lowest tested value: 42_430_000_000
     });
     let dest : Wallet = actor (wallet);
     await (with cycles = amt) dest.wallet_receive();
@@ -39,7 +42,8 @@ actor class (wallet : Text) {
   public func sweep2(keep : ?Nat) : async Nat {
     let amt : Nat = Cycles.balance() - (switch (keep) {
       case (?x) x * 1_000_000_000;
-      case _ 42_105_000_000; // lowest tested value: 42_102_453_000
+      // with freezing threshold 0:
+      case _ 42_500_000_000; // lowest tested value: unknown
     });
     let ic : IC = actor ("aaaaa-aa");
     await (with cycles = amt) ic.deposit_cycles({ canister_id = Principal.fromText(wallet) });
